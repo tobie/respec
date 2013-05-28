@@ -27,9 +27,11 @@ describe("Core - Utils", function () {
     // $.renameElement()
     it("should rename the element", function () {
         runs(function () {
-            var $div = $("<div><p><a></a></p></div>").appendTo($("body"));
+            var $div = $("<div><p><a></a></p><b>some text</b></div>").appendTo($("body"));
             $div.find("p").renameElement("span");
-            expect($div.find("span").length == 1).toBeTruthy();
+            $div.find("b").renameElement("i");
+            expect($div.find("span").length).toEqual(1);
+            expect($div.find("i").text()).toEqual("some text");
             $div.remove();
         });
     });
@@ -116,11 +118,11 @@ describe("Core - Utils", function () {
     it("should find the definition title", function () {
         runs(function () {
             var $dfn = $("<dfn title='DFN'><abbr title='ABBR'>TEXT</abbr></dfn>").appendTo($("body"));
-            expect($dfn.dfnTitle()).toEqual("DFN");
+            expect($dfn.dfnTitle()).toEqual("dfn");
             $dfn.removeAttr("title");
-            expect($dfn.dfnTitle()).toEqual("ABBR");
+            expect($dfn.dfnTitle()).toEqual("abbr");
             $dfn.find("abbr").removeAttr("title");
-            expect($dfn.dfnTitle()).toEqual("TEXT");
+            expect($dfn.dfnTitle()).toEqual("text");
             $dfn.remove();
         });
     });

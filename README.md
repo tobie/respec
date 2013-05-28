@@ -1,4 +1,3 @@
-
 ReSpec
 ======
 
@@ -13,6 +12,11 @@ Important Note
 ReSpec is not endorsed by W3C and nobody should expect the W3C Webmaster to provide advice on 
 problems encountered with ReSpec, or on why it may be failing to produce pubrules-compliant
 content.
+
+Want to change a bibliographical reference?
+===========================================
+
+Bibliographical references have been moved out of ReSpec. You want to use this: https://github.com/tobie/specref
 
 What is this version of ReSpec?
 ===============================
@@ -44,7 +48,8 @@ try to coordinate with others first to avoid working long on something that will
 
 If you're familiar with GitHub then contributing is simple: just fork and make pull requests. Please
 just be careful to note that the primary branch is `gh-pages` and not `master` (this ensures that the
-result gets published on the Web).
+result gets published on the Web). **More importantly**, please note that the development branch is
+`develop`. If you are making patches and pull requests, please base them off this branch.
 
 If you're not familiar with GitHub, you need to follow the following steps:
 

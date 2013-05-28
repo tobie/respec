@@ -82,12 +82,13 @@ define(
                 respecEvents.sub("end", function () {
                     pluginStack--;
                     if (!pluginStack) respecEvents.pub("end-all");
+                    document.respecDone = true;
                 });
                 respecEvents.pub("start", "core/base-runner");
                 
                 // the first in the plugs is going to be us
                 plugs.shift();
-                if (!respecConfig) window.respecConfig = {};
+                if (!("respecConfig" in window)) window.respecConfig = {};
 
                 // the base URL is used by some modules
                 var $scripts = $("script"),
@@ -98,6 +99,8 @@ define(
                     if (/\/js\//.test(src)) baseUrl = src.replace(/\/js\/.*/, "\/js\/");
                 });
                 respecConfig.respecBase = baseUrl;
+                respecConfig.scheme = (respecConfig.scheme) ? respecConfig.scheme : location.protocol.replace(":", "").toLowerCase();
+                respecConfig.httpScheme = (respecConfig.scheme === "https") ? "https" : "http";
                 
                 var pipeline;
                 pipeline = function () {

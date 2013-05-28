@@ -40,10 +40,11 @@ define(
                 var txts = $("body", doc).allTextNodes(["pre"]);
                 var rx = new RegExp("(\\bMUST(?:\\s+NOT)?\\b|\\bSHOULD(?:\\s+NOT)?\\b|\\bSHALL(?:\\s+NOT)?\\b|" +
                                     "\\bMAY\\b|\\b(?:NOT\\s+)?REQUIRED\\b|\\b(?:NOT\\s+)?RECOMMENDED\\b|\\bOPTIONAL\\b|" +
-                                    "(?:\\[\\[(?:!)?[A-Za-z0-9-]+\\]\\])" + ( abbrRx ? "|" + abbrRx : "") + ")");
+                                    "(?:\\[\\[(?:!|\\\\)?[A-Za-z0-9-]+\\]\\])" + ( abbrRx ? "|" + abbrRx : "") + ")");
                 for (var i = 0; i < txts.length; i++) {
                     var txt = txts[i];
                     var subtxt = txt.data.split(rx);
+                    if (subtxt.length === 1) continue;
 
                     var df = doc.createDocumentFragment();
                     while (subtxt.length) {
@@ -52,9 +53,8 @@ define(
                         if (subtxt.length) matched = subtxt.shift();
                         df.appendChild(doc.createTextNode(t));
                         if (matched) {
-                            // RFC 2129
+                            // RFC 2119
                             if (/MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|SHALL(?:\s+NOT)?|MAY|(?:NOT\s+)?REQUIRED|(?:NOT\s+)?RECOMMENDED|OPTIONAL/.test(matched)) {
-                                matched = matched.toLowerCase();
                                 df.appendChild($("<em/>").attr({ "class": "rfc2119", title: matched }).text(matched)[0]);
                             }
                             // BIBREF
@@ -62,17 +62,22 @@ define(
                                 var ref = matched;
                                 ref = ref.replace(/^\[\[/, "");
                                 ref = ref.replace(/\]\]$/, "");
-                                var norm = false;
-                                if (ref.indexOf("!") === 0) {
-                                    norm = true;
-                                    ref = ref.replace(/^!/, "");
+                                if (ref.indexOf("\\") === 0) {
+                                    df.appendChild(doc.createTextNode("[[" + ref.replace(/^\\/, "") + "]]"));
                                 }
-                                // contrary to before, we always insert the link
-                                if (norm) conf.normativeReferences[ref] = true;
-                                else      conf.informativeReferences[ref] = true;
-                                df.appendChild(doc.createTextNode("["));
-                                df.appendChild($("<cite/>").wrapInner($("<a/>").attr({"class": "bibref", rel: "biblioentry", href: "#bib-" + ref}).text(ref))[0]);
-                                df.appendChild(doc.createTextNode("]"));
+                                else {
+                                    var norm = false;
+                                    if (ref.indexOf("!") === 0) {
+                                        norm = true;
+                                        ref = ref.replace(/^!/, "");
+                                    }
+                                    // contrary to before, we always insert the link
+                                    if (norm) conf.normativeReferences[ref] = true;
+                                    else      conf.informativeReferences[ref] = true;
+                                    df.appendChild(doc.createTextNode("["));
+                                    df.appendChild($("<cite/>").wrapInner($("<a/>").attr({"class": "bibref", href: "#bib-" + ref}).text(ref))[0]);
+                                    df.appendChild(doc.createTextNode("]"));
+                                }
                             }
                             // ABBR
                             else if (abbrMap[matched]) {

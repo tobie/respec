@@ -15,7 +15,7 @@ exec("git symbolic-ref HEAD", function (err, stdout, stderr) {
     var branch = stdout.replace(/refs\/heads\//, "").replace(/\n/, "");
     if (branch != "release/v" + version)
         return console.log("Current branch (" + branch + ") does not match release/v" + version);
-    if (pth.existsSync(versioned))
+    if (fs.existsSync(versioned))
         return console.log("Output build file respec-w3c-common-" + version + ".js already exists");
     
     // optimisation settings
@@ -26,18 +26,19 @@ exec("git symbolic-ref HEAD", function (err, stdout, stderr) {
     // ,   optimize:   "none"
     ,   paths:  {
             requireLib: "./require"
-        ,   biblio:     "../bibref/biblio"
         ,   simpleNode: "./simple-node"
         ,   shortcut:   "./shortcut"
         }
     ,   name:       "profile-w3c-common"
-    ,   include:    "requireLib biblio simpleNode shortcut".split(" ")
+    ,   include:    "requireLib simpleNode shortcut".split(" ")
     ,   out:        versioned
     ,   inlineText: true
+    ,   preserveLicenseComments:    false
     };
     r.optimize(config, function (resp) {
-        fs.writeFileSync(pth.join(builds, "respec-w3c-common.js"), "/* ReSpec " + version + " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n" +
-                                    fs.readFileSync(config.out));
+        fs.writeFileSync(pth.join(builds, "respec-w3c-common.js"),
+                        "/* ReSpec " + version + " - Robin Berjon, http://berjon.com/ (@robinberjon) */\n/* See original source for licenses: https://github.com/darobin/respec. */\n" +
+                        fs.readFileSync(config.out));
         console.log("OK!");
     });
 });

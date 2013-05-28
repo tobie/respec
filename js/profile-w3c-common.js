@@ -4,6 +4,8 @@ define([
         ,   "core/base-runner"
         ,   "core/override-configuration"
         ,   "core/default-root-attr"
+        // ,   "core/local-biblio"
+        ,   "core/markdown"
         ,   "core/style"
         ,   "w3c/style"
         ,   "w3c/headers"
@@ -12,21 +14,22 @@ define([
         ,   "core/data-transform"
         ,   "core/data-include"
         ,   "core/inlines"
-        ,   "core/dfn"
         ,   "core/examples"
         ,   "core/issues-notes"
+        ,   "core/requirements"
         ,   "core/highlight"
         ,   "core/best-practices"
         ,   "core/figures"
         ,   "w3c/legacy"
         ,   "core/webidl-oldschool"
+        ,   "core/dfn"
         ,   "core/fix-headers"
         ,   "core/structure"
         ,   "w3c/informative"
         ,   "core/section-refs"
         ,   "core/id-headers"
-        ,   "w3c/unhtml5"
         ,   "core/remove-respec"
+        ,   "core/location-hash"
         ],
         function (domReady, runner) {
             var args = Array.prototype.slice.call(arguments)
@@ -62,8 +65,8 @@ define([
 //    that all others can reuse)
 //  - note that if we have a menu, we can drop shortcut.js!
 //  - WebIDL porting
-//      - give it a module of its own webidl-old-school
-//      - write a big set of tests for it (without touching anything else)
+//      x give it a module of its own webidl-oldschool
+//      x write a big set of tests for it (without touching anything else)
 //      - make it use templates wherever possible
 //      - then make it use jQuery
 //      - drop simple-node

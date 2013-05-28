@@ -11,6 +11,7 @@ define(
                 if (!conf.definitionMap) conf.definitionMap = {};
                 $("dfn").each(function () {
                     var title = $(this).dfnTitle();
+                    if (conf.definitionMap[title]) msg.pub("error", "Duplicate definition of '" + title + "'");
                     conf.definitionMap[title] = $(this).makeID("dfn", title);
                 });
                 $("a:not([href])").each(function () {
