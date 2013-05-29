@@ -134,7 +134,7 @@ define(
                 // it.
                 text = text.replace(/&gt;/g, '>');
                 text = this.removeLeftPadding(text);
-                return marked(text);
+                return (text);
             },
             
             removeLeftPadding: function(text) {
